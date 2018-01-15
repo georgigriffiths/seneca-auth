@@ -50,9 +50,11 @@ module.exports = {
     login: {win: '/account', fail: '/'},
     logout: {win: '/', fail: '/'},
     register: {win: '/account', fail: '/'},
-    reset_create: {win: '/', fail: '/'},
-    reset_load: {win: '/', fail: '/'},
-    reset_execute: {win: '/', fail: '/'},
+
+    // Are these correct should be create_reset, load_reset, execute_reset
+    create_reset: {win: '/', fail: '/'},
+    load_reset: {win: '/', fail: '/'},
+    execute_reset: {win: '/', fail: '/'},
     confirm: {win: '/', fail: '/'}
   },
 

@@ -19,14 +19,21 @@ suite('config suite tests ', function () {
         si.use(require('seneca-entity'))
       }
       if (si.version >= '3.0.0') {
+        si.use(require('seneca-basic'))
         si.use(require('seneca-web'))
       }
-      si.use('user')
-      var config = {}
-      config[cfg] = {}
-      si.use(require('..'), config)
+      si.ready(function (err) {
+        if (err) {
+          return process.exit(!console.error(err))
+        }
+        si.use('user')
+        var config = {}
+        config[cfg] = {}
+        si.use(require('..'), config)
+      })
 
       function errhandler (err) {
+        console.log("errhandler", err)
         Assert(err.msg.indexOf('auth: <' + cfg + '> option is no longer supported'))
         done()
       }
@@ -39,14 +46,21 @@ suite('config suite tests ', function () {
       si.use(require('seneca-entity'))
     }
     if (si.version >= '3.0.0') {
+      si.use(require('seneca-basic'))
       si.use(require('seneca-web'))
     }
-    si.use('user')
-    var config = {}
-    config.server = 'hapi'
-    si.use(require('..'), config)
+    si.ready(function (err) {
+      if (err) {
+        return process.exit(!console.error(err))
+      }
+      si.use('user')
+      var config = {}
+      config.server = 'hapi'
+      si.use(require('..'), config)
+    })
 
-    function errhandler () {
+    function errhandler (err) {
+      console.log("errhandler2", err)
       done()// if this is called then test will fail.
     }
     done()

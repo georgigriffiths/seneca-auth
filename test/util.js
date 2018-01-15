@@ -1,62 +1,64 @@
 var Assert = require('assert')
 var _ = require('lodash')
-var Passport = require('passport')
 
 exports.init = function (options, cb) {
   var agent
   var request = require('supertest')
   var express = require('express')
-  var cookieparser = require('cookie-parser')
   var bodyparser = require('body-parser')
-  var session = require('express-session')
 
   var si = require('seneca')({ log: 'silent' })
 
-  if (si.version >= '2.0.0') {
-    si.use(require('seneca-entity'))
-  }
-  if (si.version >= '3.0.0') {
-    si.use(require('seneca-web'))
-  }
+  si.use('basic')
 
-  si.use('user')
-  si.use(require('..'), _.extend({secure: true, restrict: '/api'}, options || {}))
+  si.use('entity')
+
+  var app = express()
+  app.use(bodyparser.json())
+
+  si.use('web', {
+    context: app,
+    adapter: require('seneca-web-adapter-express'),
+    options: {parseBody: false}
+  })
+  agent = request(app)
 
   si.ready(function (err) {
     if (err) {
       return process.exit(!console.error(err))
     }
 
-    var app = express()
-    app.use(cookieparser())
-    app.use(bodyparser.json())
-    app.use(session({secret: 'si', resave: true, saveUninitialized: true}))
-    app.use(Passport.initialize())
-    app.use(Passport.session())
+    si.use('mem-store', {web: {
+      dump: false
+    }})
+    si.use('user')
+    si.use(require('..'), _.extend({secure: true, restrict: '/api'}, options || {}))
 
-    app.use(si.export('web'))
-    agent = request(app)
-
-    si.add({role: 'test', cmd: 'service'}, function (args, cb) {
-      return cb(null, {ok: true, test: true})
-    })
-    si.add({role: 'test', cmd: 'service2'}, function (args, cb) {
-      return cb(null, {ok: true, test: true})
-    })
-    si.act({
-      role: 'web',
-      plugin: 'test',
-      use: {
-        prefix: '/api',
-        pin: {role: 'test', cmd: '*'},
-        map: {
-          service: {GET: true},
-          service2: {GET: true}
-        }
+    si.ready(function (err) {
+      if (err) {
+        return process.exit(!console.error(err))
       }
-    })
+      si.add({role: 'test', cmd: 'service'}, function (args, cb) {
+        return cb(null, {ok: true, test: true})
+      })
+      si.add({role: 'test', cmd: 'service2'}, function (args, cb) {
+        return cb(null, {ok: true, test: true})
+      })
+      si.act({
+        role: 'web',
+        plugin: 'test',
+        routes: {
+          prefix: '/api',
+          pin: 'role:test,cmd:*',
+          map: {
+            service: {GET: true},
+            service2: {GET: true}
+          }
+        }
+      })
 
-    cb(null, agent, si)
+      cb(null, agent, si)
+    })
   })
 }
 
