@@ -13,7 +13,7 @@ var Util = require('./util.js')
 
 var user = {nick: 'u1', name: 'nu1', email: 'u1@example.com', password: 'u1', active: true}
 
-suite('restrict suite tests ', function () {
+suite('restrict login suite tests ', function () {
   var seneca
   before({}, function (done) {
     Util.init({}, function (err, agentData, si) {
@@ -105,7 +105,7 @@ suite('restrict suite tests ', function () {
   })
 })
 
-suite('restrict suite tests ', function () {
+suite('restrict login suite tests 2', function () {
   var seneca
   before({}, function (done) {
     Util.init({}, function (err, agentData, si) {

@@ -11,7 +11,7 @@ var before = lab.before
 
 var Util = require('./util.js')
 
-suite('restricted suite tests ', function () {
+suite('restricted as function tests ', function () {
   before({}, function (done) {
     Util.init({restrict: restrict_fct}, function (err, agentData) {
       Assert.ok(!err)

@@ -35,7 +35,7 @@
   "license": "MIT",
   "main": "auth.js",
   "scripts": {
-    "test": "lab test -r console -v -L -m 5000 -t 67",
+    "test": "lab test -r console -v -L -m 5000 -t 67 -I WebAssembly",
     "test:node6": "LAB_FLAGS='--leaks' && npm test",
     "coveralls": "lab -s -P test -r lcov | coveralls",
     "coverage": "lab -v -P test -L -t 81 -r html > docs/coverage.html",

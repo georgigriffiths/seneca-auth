@@ -28,9 +28,7 @@ exports.init = function (options, cb) {
       return process.exit(!console.error(err))
     }
 
-    si.use('mem-store', {web: {
-      dump: false
-    }})
+    si.use('mem-store')
     si.use('user')
     si.use(require('..'), _.extend({secure: true, restrict: '/api'}, options || {}))
 

@@ -14,7 +14,7 @@ var Util = require('./util.js')
 var cookie
 var user = {nick: 'u1', name: 'nu1', email: 'u1@example.com', password: 'u1', active: true}
 
-suite('restricted suite tests ', function () {
+suite('restricted suite tests', function () {
   before({}, function (done) {
     Util.init({}, function (err, agentData) {
       Assert.ok(!err)
